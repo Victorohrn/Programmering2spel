@@ -55,12 +55,12 @@ class TheGame(arcade.Window):
         self.enemy_textures.append(texture)
 
         
-        x_count = 7
+        x_count = 14
         x_start = 420
         x_spacing = 90
-        y_count = 5
+        y_count = 6
         y_start = 800
-        y_spacing = 40
+        y_spacing = 50
         for x in range(x_start, x_spacing * x_count + x_start, x_spacing):
             for y in range(y_start, y_spacing * y_count + y_start, y_spacing):
 
@@ -112,7 +112,7 @@ class TheGame(arcade.Window):
         self.player_list.append(self.player_sprite)
 
        
-        for x in range(75, 1015, 190):
+        for x in range(250, 1670, 190):
             self.shield(x)
 
        
@@ -135,11 +135,12 @@ class TheGame(arcade.Window):
 
         # Render the text
         arcade.draw_text(f"Score: {self.score}", 10, 20, arcade.color.WHITE, 14)
-
+        arcade.draw_text(f" ESC TO EXIT\n R to restart\n P to pause for 10s", 1770, 20, arcade.color.WHITE, 14)
         # Draw game over if the game state is such
         if self.game_state == GAME_OVER:
-            arcade.draw_text(f"GAME OVER", 250, 300, arcade.color.WHITE, 55)
+            arcade.draw_text(f"GAME OVER", SCREEN_WIDTH / 2 - 75, 500, arcade.color.WHITE, 55 , 750)
             self.set_mouse_visible(True)
+
     def update_enemies(self):
 
         
@@ -181,8 +182,8 @@ class TheGame(arcade.Window):
             
             if random.randrange(chance) == 0 and enemy.center_x not in x_spawn:
                 
-                bullet = arcade.Sprite("./static/laser.png", SPRITE_SCALING_LASER)
-
+                bullet = arcade.Sprite("./static/Bullet.png", SPRITE_SCALING_LASER,)
+                
               
                 bullet.angle = 180
 
@@ -256,12 +257,15 @@ class TheGame(arcade.Window):
             
             if bullet.bottom > SCREEN_HEIGHT:
                 bullet.remove_from_sprite_lists()
+
     def on_key_press(self, key, modifiers):
         if key == arcade.key.ESCAPE:
             exit()
         if key == arcade.key.P:
             arcade.pause(10)
-    
+        if key == arcade.key.R:
+            self.play()
+            self.set_mouse_visible(False)
     def on_mouse_motion(self, x, y, dx, dy):
         """
         Called whenever the mouse moves.
@@ -300,7 +304,8 @@ class TheGame(arcade.Window):
             # Add the bullet to the appropriate lists
             self.player_bullet_list.append(bullet)
 
-
+            if self.game_state == GAME_OVER:
+                return
 
     def on_update(self, deltatime):
         """
