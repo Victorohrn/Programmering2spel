@@ -80,7 +80,7 @@ class TheGame(arcade.Window):
         shield_block_height = 1
         shield_width_count = 1
         shield_height_count = 1
-        
+
         if self.Difficulty == 1:
             shield_block_width = 5
             shield_block_height = 10
@@ -88,7 +88,7 @@ class TheGame(arcade.Window):
             shield_height_count = 5
 
         elif self.Difficulty == 2:
-            shield_block_width = 2
+            shield_block_width = 5
             shield_block_height = 5
             shield_width_count = 10
             shield_height_count = 2
@@ -130,7 +130,7 @@ class TheGame(arcade.Window):
 
        
         arcade.set_background_color(arcade.color.BLACK)
-
+        
         self.setup_level_one()
     def on_draw(self):
         arcade.start_render()
@@ -148,12 +148,12 @@ class TheGame(arcade.Window):
             self.shield_list.draw()
 
         if self.Difficulty == 0:
-            arcade.draw_text(f"Press 1 for Normal\n Press 2 for Hard",  SCREEN_WIDTH / 2 - 175, 500, arcade.color.WHITE, 55 , 750)
+            arcade.draw_text(f"Press 1 for Normal\nPress 2 for Hard",  SCREEN_WIDTH / 2 - 175, 500, arcade.color.WHITE, 55 , 750)
 
         
         # Render the text
         arcade.draw_text(f"Score: {self.score}", 10, 20, arcade.color.WHITE, 14)
-        arcade.draw_text(f" ESC TO EXIT\n R to restart\n P to pause for 10s", 1770, 20, arcade.color.WHITE, 14)
+        arcade.draw_text(f" ESC TO EXIT\n R to restart\n P to Pause", 1770, 20, arcade.color.WHITE, 14)
         # Draw game over if the game state is such
         
         if self.game_state == GAME_OVER:
@@ -190,7 +190,8 @@ class TheGame(arcade.Window):
                 else:
                     enemy.texture = self.enemy_textures[1]
 
-  
+        if enemy.center_y <= 75:
+            self.game_state = GAME_OVER
 
     def allow_enemies_to_fire(self):
         """
@@ -297,7 +298,7 @@ class TheGame(arcade.Window):
 
         if key == arcade.key.P:
             self.pause = not self.pause
-
+            self.set_mouse_visible(False)
         if key == arcade.key.R:
             self.play()
             self.set_mouse_visible(False)
@@ -306,9 +307,7 @@ class TheGame(arcade.Window):
             self.Difficulty = 1
             self.play()
             self.set_mouse_visible(False)
-            """
-            self.shield_list.shield_sprite.remove_from_sprite_lists()
-           """
+           
         if key == arcade.key.KEY_2:
             self.Difficulty = 2
             self.play()
@@ -363,6 +362,7 @@ class TheGame(arcade.Window):
         """
         if self.pause:
             return
+            
 
         self.update_enemies()
         self.allow_enemies_to_fire()
